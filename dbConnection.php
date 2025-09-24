@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-$site_url = "http://localhost/test/Maritimes_Certificate/";
+$site_url = "http://localhost/test/bahamas/";
 $host = "localhost";
 $user = "root"; 
 $pass = "";     
-$dbname = "cook_islands_certificates";
+$dbname = "bahamas";
 
 // $site_url = "";
 // $host = "localhost";

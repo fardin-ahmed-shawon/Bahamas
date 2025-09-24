@@ -58,49 +58,6 @@ require 'header.php';
     <?php endif; ?>
 
 
-    <!-- Certificate List -->
-    <br><br><h3 class="section-title">Certificate List</h3>
-    <?php if (!empty($certificates)): ?>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Certificate ID</th>
-                        <th>Certificate Type</th>
-                        <th>Full Name</th>
-                        <th>Certificate Number</th>
-                        <th>Date of Issue</th>
-                        <th>Date of Expiry</th>
-                        <th>Created At</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($certificates as $cert): ?>
-                    <tr>
-                        <td><?= $cert['id'] ?></td>
-                        <td><?= htmlspecialchars($cert['certificate_id']) ?></td>
-                        <td><?= htmlspecialchars($cert['certificate_type']) ?></td>
-                        <td><?= htmlspecialchars($cert['full_name']) ?></td>
-                        <td><?= htmlspecialchars($cert['certificate_number']) ?></td>
-                        <td><?= $cert['date_of_issue'] ?></td>
-                        <td><?= $cert['date_of_expiry'] ?></td>
-                        <td><?= $cert['created_at'] ?></td>
-                        <td>
-                            <a href="../certificate_generate/certificate.php?id=<?= $cert['certificate_id'] ?>" target="_blank" class="btn btn-sm btn-dark text-white"><b>Preview</b></a>
-                            <a href="edit_certificate.php?id=<?= $cert['id'] ?>" class="btn btn-sm btn-warning"><b>Edit</b></a>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-        <a href="certificate_list.php" class="btn btn-dark px-4 py-2">See All</a>
-    <?php else: ?>
-        <div class="alert alert-warning mt-3">No certificates found.</div>
-    <?php endif; ?>
-
 <!-------------------------->
 <!----- END MAIN AREA------>
 <!-------------------------->
