@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->execute()) {
         echo "<div style='max-width:600px;margin:50px auto;padding:20px;background:#d4edda;color:#155724;border-radius:10px;'>
-                Application submitted successfully!<br>
+                Information submitted successfully!<br>
                 Your Tracking Number: <strong>{$tracking_number}</strong>
                 <a href='index.php' style='display:inline-block;margin-top:10px;color:#155724;text-decoration:underline;'>Go To Dashboard</a>
               </div>";

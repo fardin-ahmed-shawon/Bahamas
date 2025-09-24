@@ -40,23 +40,23 @@ require 'header.php';
     <form action="certificate_info_store.php" method="POST">
         <div class="mb-3">
             <label for="seafarer_name">(*) Seafarer Name</label>
-            <input type="text" class="form-control" name="seafarer_name" placeholder="John Michael Doe" required>
+            <input type="text" class="form-control" name="seafarer_name" placeholder="Enter Name" required>
         </div>
         <div class="mb-3">
             <label for="nationality">Nationality</label>
-            <input type="text" class="form-control" name="nationality" placeholder="USA">
+            <input type="text" class="form-control" name="nationality" placeholder="Enter Nationality">
         </div>
         <div class="mb-3">
             <label for="capacity">(*) Capacity</label>
-            <input type="text" class="form-control" name="capacity" placeholder="Master Mariner" required>
+            <input type="text" class="form-control" name="capacity" required>
         </div>
         <div class="mb-3">
             <label for="certificate_type">(*) Certificate Type</label>
-            <input type="text" class="form-control" name="certificate_type" placeholder="CoC or CoC & CoP" required>
+            <input type="text" class="form-control" name="certificate_type" required>
         </div>
         <div class="mb-3">
             <label for="tracking_number">(*) Tracking Number</label>
-            <input type="text" class="form-control" name="tracking_number" placeholder="CERT-123456" required>
+            <input type="text" class="form-control" name="tracking_number" required>
         </div>
         <div class="mb-3">
             <label for="date_of_issue">(*) Date of Issue</label>
@@ -68,7 +68,7 @@ require 'header.php';
         </div>
         <div class="mb-3">
             <label for="certificate_status">Certificate Status</label>
-            <input type="text" class="form-control" name="certificate_status" placeholder="Pending or Approved">
+            <input type="text" class="form-control" name="certificate_status" placeholder="Enter Status">
         </div>
         <div class="text-center mt-4">
             <button type="submit" class="btn-submit">Submit Application</button>
