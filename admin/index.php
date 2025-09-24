@@ -46,7 +46,7 @@ $totalCertificates = count($certificates);
                     <th>Date of Expiry</th>
                     <th>Status</th>
                     <th>Created At</th>
-                    <th>Action</th>
+                    <th colspan="2">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,6 +64,9 @@ $totalCertificates = count($certificates);
                     <td><?= $cert['created_at'] ?></td>
                     <td>
                         <a href="edit_certificate.php?id=<?= $cert['id'] ?>" class="btn btn-sm btn-warning"><b>Edit</b></a>
+                    </td>
+                    <td>
+                        <a href="delete_certificate.php?id=<?= $cert['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this certificate?');"><b>Delete</b></a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

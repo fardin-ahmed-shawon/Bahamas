@@ -1,29 +1,29 @@
 <?php
-$page_title = "Application List";
+$page_title = "Certificate List";
 require 'header.php';
 
 // Handle search
 $search = $_GET['search'] ?? '';
-$applications = [];
+$certificates = [];
 
 if ($search) {
-    $stmt = $conn->prepare("SELECT * FROM applications 
-                            WHERE first_name LIKE ? 
-                               OR middle_name LIKE ? 
-                               OR surname LIKE ? 
-                               OR email LIKE ? 
-                               OR document_serial LIKE ?
+    $stmt = $conn->prepare("SELECT * FROM certificates 
+                            WHERE seafarer_name LIKE ? 
+                               OR nationality LIKE ? 
+                               OR capacity LIKE ? 
+                               OR certificate_type LIKE ? 
+                               OR tracking_number LIKE ? 
                             ORDER BY created_at DESC");
     $like = "%$search%";
     $stmt->bind_param("sssss", $like, $like, $like, $like, $like);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $result = $conn->query("SELECT * FROM applications ORDER BY created_at DESC");
+    $result = $conn->query("SELECT * FROM certificates ORDER BY created_at DESC");
 }
 
 if ($result && $result->num_rows > 0) {
-    $applications = $result->fetch_all(MYSQLI_ASSOC);
+    $certificates = $result->fetch_all(MYSQLI_ASSOC);
 }
 ?>
 
@@ -34,39 +34,49 @@ if ($result && $result->num_rows > 0) {
 <div class="row mb-4">
     <div class="col-md-6">
         <form method="get" class="d-flex">
-            <input type="text" name="search" class="form-control me-2" placeholder="Search applications..." 
+            <input type="text" name="search" class="form-control me-2" placeholder="Search certificates..." 
                    value="<?= htmlspecialchars($search) ?>">
             <button type="submit" class="btn btn-dark">Search</button>
         </form>
     </div>
 </div>
 
-<?php if (!empty($applications)): ?>
+<?php if (!empty($certificates)): ?>
 <div class="table-responsive">
     <table class="table table-hover align-middle">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Full Name</th>
-                <th>Date of Birth</th>
-                <th>Email</th>
-                <th>Document Serial</th>
+                <th>Seafarer Name</th>
+                <th>Nationality</th>
+                <th>Capacity</th>
+                <th>Certificate Type</th>
+                <th>Tracking Number</th>
+                <th>Date of Issue</th>
+                <th>Date of Expiry</th>
+                <th>Status</th>
                 <th>Created At</th>
-                <th>Action</th>
+                <th colspan="2">Action</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($applications as $app): ?>
+            <?php foreach ($certificates as $cert): ?>
             <tr>
-                <td><?= $app['id'] ?></td>
-                <td><?= htmlspecialchars($app['first_name']." ".$app['middle_name']." ".$app['surname']) ?></td>
-                <td><?= $app['date_of_birth'] ?></td>
-                <td><?= htmlspecialchars($app['email']) ?></td>
-                <td><?= htmlspecialchars($app['document_serial']) ?></td>
-                <td><?= $app['created_at'] ?></td>
+                <td><?= $cert['id'] ?></td>
+                <td><?= htmlspecialchars($cert['seafarer_name']) ?></td>
+                <td><?= htmlspecialchars($cert['nationality']) ?></td>
+                <td><?= htmlspecialchars($cert['capacity']) ?></td>
+                <td><?= htmlspecialchars($cert['certificate_type']) ?></td>
+                <td><?= htmlspecialchars($cert['tracking_number']) ?></td>
+                <td><?= $cert['date_of_issue'] ?></td>
+                <td><?= $cert['date_of_expiry'] ?></td>
+                <td><?= htmlspecialchars($cert['certificate_status']) ?></td>
+                <td><?= $cert['created_at'] ?></td>
                 <td>
-                    <a href="view_application.php?id=<?= $app['id'] ?>" class="btn btn-sm btn-dark text-white"><b>Details</b></a>
-                    <a href="edit_application.php?id=<?= $app['id'] ?>" class="btn btn-sm btn-warning"><b>Edit</b></a>
+                    <a href="edit_certificate.php?id=<?= $cert['id'] ?>" class="btn btn-sm btn-warning"><b>Edit</b></a>
+                </td>
+                <td>
+                    <a href="delete_certificate.php?id=<?= $cert['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this certificate?');"><b>Delete</b></a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -74,7 +84,7 @@ if ($result && $result->num_rows > 0) {
     </table>
 </div>
 <?php else: ?>
-    <div class="alert alert-warning">No applications found.</div>
+    <div class="alert alert-warning">No certificates found.</div>
 <?php endif; ?>
 
 <!-------------------------->
