@@ -45,7 +45,6 @@ $totalCertificates = count($certificates);
                     <th>Date of Issue</th>
                     <th>Date of Expiry</th>
                     <th>Status</th>
-                    <th>Created At</th>
                     <th colspan="2">Action</th>
                 </tr>
             </thead>
@@ -61,7 +60,6 @@ $totalCertificates = count($certificates);
                     <td><?= $cert['date_of_issue'] ?></td>
                     <td><?= $cert['date_of_expiry'] ?></td>
                     <td><?= htmlspecialchars($cert['certificate_status']) ?></td>
-                    <td><?= $cert['created_at'] ?></td>
                     <td>
                         <a href="edit_certificate.php?id=<?= $cert['id'] ?>" class="btn btn-sm btn-warning"><b>Edit</b></a>
                     </td>

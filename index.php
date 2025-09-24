@@ -1,8 +1,9 @@
 <?php
-$current_page = basename($_SERVER['PHP_SELF']); // Get the current page name
-$page_title = 'Blank'; // Set the page title
+$current_page = basename($_SERVER['PHP_SELF']); 
+$page_title = 'Verify Certificate';
+require 'header.php'; 
 ?>
-<?php require 'header.php'; ?>
+
 <style>
     button {
         background: #000;
@@ -21,9 +22,6 @@ $page_title = 'Blank'; // Set the page title
     }
 </style>
 
-<!--------------------------->
-<!-- START MAIN AREA -->
-<!--------------------------->
 <div class="content-wrapper">
   <div class="container my-5">
     <div class="card shadow border-0 rounded-3">
@@ -77,28 +75,63 @@ $page_title = 'Blank'; // Set the page title
 
           <!-- Seafarer -->
           <div class="tab-pane fade" id="seafarerFields" role="tabpanel" aria-labelledby="seafarer-tab">
-            <form>
+            <form method="POST">
               <div class="mb-3">
                 <label for="trackingNumber2" class="form-label fw-semibold">Tracking Number</label>
-                <input type="text" class="form-control form-control-lg rounded-3" id="trackingNumber2" placeholder="Enter tracking number">
+                <input type="text" name="tracking_number" class="form-control form-control-lg rounded-3" id="trackingNumber2" placeholder="Enter tracking number" required>
               </div>
 
               <div class="mb-3">
                 <label for="surname" class="form-label fw-semibold">Surname as in passport</label>
-                <input type="text" class="form-control form-control-lg rounded-3" id="surname" placeholder="Enter surname">
+                <input type="text" name="surname" class="form-control form-control-lg rounded-3" id="surname" placeholder="Enter surname" required>
               </div>
 
               <div class="mb-3">
                 <label for="dob" class="form-label fw-semibold">Date of Birth</label>
-                <input type="date" class="form-control form-control-lg rounded-3" id="dob">
+                <input type="date" name="dob" class="form-control form-control-lg rounded-3" id="dob" required>
               </div>
 
               <div class="d-flex justify-content-end gap-2 mt-4">
                 <button type="reset">Reset</button>
-                <button type="submit">Verify Certificate</button>
+                <button type="submit" name="verify_seafarer">Verify Certificate</button>
               </div>
-
             </form>
+
+            <?php
+            if (isset($_POST['verify_seafarer'])) {
+                require 'dbConnection.php'; // include your DB connection
+
+                $tracking_number = $_POST['tracking_number'];
+                $surname = $_POST['surname'];
+                $dob = $_POST['dob'];
+
+                // Query to check certificate
+                $stmt = $conn->prepare("SELECT * FROM certificates WHERE tracking_number=? AND seafarer_name LIKE ? AND date_of_issue <= ? AND date_of_expiry >= ?");
+                $stmt->bind_param("ssss", $tracking_number, $surname_like, $dob, $dob);
+
+                // Using % for partial match on surname
+                $surname_like = "%$surname%";
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    $cert = $result->fetch_assoc();
+                    echo '<div class="alert alert-success mt-4">';
+                    echo '<h5>Certificate Found:</h5>';
+                    echo '<p><b>Seafarer Name:</b> ' . htmlspecialchars($cert['seafarer_name']) . '</p>';
+                    echo '<p><b>Nationality:</b> ' . htmlspecialchars($cert['nationality']) . '</p>';
+                    echo '<p><b>Capacity:</b> ' . htmlspecialchars($cert['capacity']) . '</p>';
+                    echo '<p><b>Certificate Type:</b> ' . htmlspecialchars($cert['certificate_type']) . '</p>';
+                    echo '<p><b>Tracking Number:</b> ' . htmlspecialchars($cert['tracking_number']) . '</p>';
+                    echo '<p><b>Date of Issue:</b> ' . htmlspecialchars($cert['date_of_issue']) . '</p>';
+                    echo '<p><b>Date of Expiry:</b> ' . htmlspecialchars($cert['date_of_expiry']) . '</p>';
+                    echo '<p><b>Status:</b> ' . htmlspecialchars($cert['certificate_status']) . '</p>';
+                    echo '</div>';
+                } else {
+                    echo '<div class="alert alert-danger mt-4">Certificate not found. Please check your details.</div>';
+                }
+            }
+            ?>
           </div>
 
         </div>
@@ -106,8 +139,5 @@ $page_title = 'Blank'; // Set the page title
     </div>
   </div>
 </div>
-<!--------------------------->
-<!-- END MAIN AREA -->
-<!--------------------------->
 
 <?php require 'footer.php'; ?>
