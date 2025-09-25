@@ -46,7 +46,6 @@ $cert = $result->fetch_assoc();
 
 <style>
     body { background: #f4f6f9; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
-    .navbar { background: #2c2c74; }
     .navbar-brand img { height: 50px; }
     .form-section { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 15px; padding: 30px 40px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
     .form-section h3 { font-size: 24px; font-weight: 600; margin-bottom: 15px; color: #0078D7; }

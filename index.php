@@ -17,6 +17,11 @@ require 'header.php';
         transition: background-color 0.3s, color 0.3s;
     }
 
+    button:hover {
+        background: #0e788b;
+        color: #fff;
+    }
+
     .sidebar .nav .nav-item.active > .nav-link .menu-title {
         color: #0e788b;
     }
@@ -49,10 +54,10 @@ require 'header.php';
 
           <!-- Vessel/Company -->
           <div class="tab-pane fade show active" id="vesselFields" role="tabpanel" aria-labelledby="vessel-tab">
-            <form>
+            <form method="POST">
               <div class="mb-3">
                 <label for="trackingNumber1" class="form-label fw-semibold">Tracking Number</label>
-                <input type="text" class="form-control form-control-lg rounded-3" id="trackingNumber1" placeholder="Enter tracking number">
+                <input type="text" name="tracking_number" class="form-control form-control-lg rounded-3" id="trackingNumber1" placeholder="Enter tracking number" required>
               </div>
 
               <div class="mb-3">
@@ -67,9 +72,8 @@ require 'header.php';
              
               <div class="d-flex justify-content-end gap-2 mt-4">
                 <button type="reset">Reset</button>
-                <button type="submit">Verify Certificate</button>
+                <button type="submit" name="verify_vessel">Verify Certificate</button>
               </div>
-
             </form>
           </div>
 
@@ -83,12 +87,12 @@ require 'header.php';
 
               <div class="mb-3">
                 <label for="surname" class="form-label fw-semibold">Surname as in passport</label>
-                <input type="text" name="surname" class="form-control form-control-lg rounded-3" id="surname" placeholder="Enter surname" required>
+                <input type="text" class="form-control form-control-lg rounded-3" id="surname" placeholder="Enter surname">
               </div>
 
               <div class="mb-3">
                 <label for="dob" class="form-label fw-semibold">Date of Birth</label>
-                <input type="date" name="dob" class="form-control form-control-lg rounded-3" id="dob" required>
+                <input type="date" class="form-control form-control-lg rounded-3" id="dob" >
               </div>
 
               <div class="d-flex justify-content-end gap-2 mt-4">
@@ -96,45 +100,55 @@ require 'header.php';
                 <button type="submit" name="verify_seafarer">Verify Certificate</button>
               </div>
             </form>
-
-            <?php
-            if (isset($_POST['verify_seafarer'])) {
-                require 'dbConnection.php'; // include your DB connection
-
-                $tracking_number = $_POST['tracking_number'];
-                $surname = $_POST['surname'];
-                $dob = $_POST['dob'];
-
-                // Query to check certificate
-                $stmt = $conn->prepare("SELECT * FROM certificates WHERE tracking_number=? AND seafarer_name LIKE ? AND date_of_issue <= ? AND date_of_expiry >= ?");
-                $stmt->bind_param("ssss", $tracking_number, $surname_like, $dob, $dob);
-
-                // Using % for partial match on surname
-                $surname_like = "%$surname%";
-                $stmt->execute();
-                $result = $stmt->get_result();
-
-                if ($result->num_rows > 0) {
-                    $cert = $result->fetch_assoc();
-                    echo '<div class="alert alert-success mt-4">';
-                    echo '<h5>Certificate Found:</h5>';
-                    echo '<p><b>Seafarer Name:</b> ' . htmlspecialchars($cert['seafarer_name']) . '</p>';
-                    echo '<p><b>Nationality:</b> ' . htmlspecialchars($cert['nationality']) . '</p>';
-                    echo '<p><b>Capacity:</b> ' . htmlspecialchars($cert['capacity']) . '</p>';
-                    echo '<p><b>Certificate Type:</b> ' . htmlspecialchars($cert['certificate_type']) . '</p>';
-                    echo '<p><b>Tracking Number:</b> ' . htmlspecialchars($cert['tracking_number']) . '</p>';
-                    echo '<p><b>Date of Issue:</b> ' . htmlspecialchars($cert['date_of_issue']) . '</p>';
-                    echo '<p><b>Date of Expiry:</b> ' . htmlspecialchars($cert['date_of_expiry']) . '</p>';
-                    echo '<p><b>Status:</b> ' . htmlspecialchars($cert['certificate_status']) . '</p>';
-                    echo '</div>';
-                } else {
-                    echo '<div class="alert alert-danger mt-4">Certificate not found. Please check your details.</div>';
-                }
-            }
-            ?>
           </div>
 
         </div>
+
+        <!-- PHP Verification -->
+        <?php
+        if (isset($_POST['verify_vessel']) || isset($_POST['verify_seafarer'])) {
+
+            $tracking_number = trim($_POST['tracking_number']);
+
+            $stmt = $conn->prepare("SELECT * FROM certificates WHERE tracking_number = ?");
+            $stmt->bind_param("s", $tracking_number);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                $cert = $result->fetch_assoc();
+                ?>
+                <!-- Card UI -->
+                <div class="container my-4">
+                  <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-header bg-info text-white rounded-top-4">
+                      <h5 class="mb-0">Certificate Verified</h5>
+                    </div>
+                    <div class="card-body p-4">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <p><b>Seafarer Name:</b> <?= htmlspecialchars($cert['seafarer_name']) ?></p>
+                          <p><b>Nationality:</b> <?= htmlspecialchars($cert['nationality']) ?></p>
+                          <p><b>Capacity:</b> <?= htmlspecialchars($cert['capacity']) ?></p>
+                          <p><b>Certificate Type:</b> <?= htmlspecialchars($cert['certificate_type']) ?></p>
+                        </div>
+                        <div class="col-md-6">
+                          <p><b>Tracking Number:</b> <?= htmlspecialchars($cert['tracking_number']) ?></p>
+                          <p><b>Date of Issue:</b> <?= htmlspecialchars($cert['date_of_issue']) ?></p>
+                          <p><b>Date of Expiry:</b> <?= htmlspecialchars($cert['date_of_expiry']) ?></p>
+                          <p><b>Status:</b> <?= htmlspecialchars($cert['certificate_status']) ?></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <?php
+            } else {
+                echo '<div class="alert alert-danger mt-4">Certificate not found. Please check the tracking number.</div>';
+            }
+        }
+        ?>
+
       </div>
     </div>
   </div>

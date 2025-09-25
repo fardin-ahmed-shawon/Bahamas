@@ -8,7 +8,7 @@ require 'header.php';
       background: #f4f6f9;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
-    .navbar { background: #2c2c74; }
+
     .navbar-brand img { height: 50px; }
     .form-section {
       max-width: 700px;

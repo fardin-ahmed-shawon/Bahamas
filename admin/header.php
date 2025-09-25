@@ -49,14 +49,8 @@ if (!isset($_SESSION['user_id'])) {
             font-weight: 600;
         }
 
-
-
-        body {
-        background: #f4f6f9;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        }
         .navbar {
-        background: #2c2c74;
+            background: #000000ff;
         }
         .navbar-brand img {
         height: 50px;
